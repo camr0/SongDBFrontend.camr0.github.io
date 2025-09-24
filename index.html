@@ -304,11 +304,21 @@
             border-radius: 8px;
             font-weight: 600;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
         }
 
-        .song-link:hover {
+        .song-link:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .song-link:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .no-results {
@@ -472,15 +482,79 @@
         // Version 12 deployment with 10 song limit + JSONP (no proxy needed)
         const API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
         
+        // YouTube API configuration
+        const YOUTUBE_API_KEY = 'AIzaSyB7TxToNs7tJlrudx0MLqfKcMaNoTqnkTM';
+        
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.5.9-smart-search',
-                timestamp: '2025-09-24T16:00:00Z',
-                commit: 'search123',
+                version: 'v1.6.0-youtube-api',
+                timestamp: '2025-09-24T16:10:00Z',
+                commit: 'api123',
                 api_deployment: 'Version-15-simplified',
-                method: 'jsonp-native'
+                method: 'jsonp-native + youtube-api'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
+
+        // YouTube URL cache to avoid repeated API calls
+        const youtubeUrlCache = new Map();
+
+        // YouTube API functions
+        async function searchYouTubeVideo(title) {
+            try {
+                const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`"${title}"`)}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
+                
+                const response = await fetch(searchUrl);
+                const data = await response.json();
+                
+                if (data.items && data.items[0]) {
+                    const videoId = data.items[0].id.videoId;
+                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                    console.log(`🎥 Found exact video for "${title}": ${videoUrl}`);
+                    return videoUrl;
+                }
+                
+                console.log(`⚠️ No exact video found for "${title}"`);
+                return null;
+            } catch (error) {
+                console.error('YouTube API error:', error);
+                return null;
+            }
+        }
+
+        async function watchPerformance(songTitle, fallbackUrl, buttonElement) {
+            // Check cache first
+            if (youtubeUrlCache.has(songTitle)) {
+                console.log(`📦 Using cached URL for "${songTitle}"`);
+                window.open(youtubeUrlCache.get(songTitle), '_blank');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = buttonElement.textContent;
+            buttonElement.textContent = '🔍 Finding video...';
+            buttonElement.disabled = true;
+            
+            try {
+                // Hit YouTube API only when button is clicked
+                const exactUrl = await searchYouTubeVideo(songTitle);
+                
+                if (exactUrl) {
+                    youtubeUrlCache.set(songTitle, exactUrl);
+                    window.open(exactUrl, '_blank');
+                } else {
+                    // Fallback to search URL
+                    console.log(`🔍 Using fallback search for "${songTitle}"`);
+                    window.open(fallbackUrl, '_blank');
+                }
+            } catch (error) {
+                console.log('YouTube API failed, using fallback:', error);
+                window.open(fallbackUrl, '_blank');
+            } finally {
+                // Reset button
+                buttonElement.textContent = originalText;
+                buttonElement.disabled = false;
+            }
+        }
 
         // Multi-select functionality
         function toggleDropdown(type) {
@@ -651,7 +725,7 @@
 
                     ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
                     
-                    ${song.link ? `<a href="${getYouTubeLink(song.link, song.title, song.artist)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
+                    ${song.link ? `<button onclick="watchPerformance('${escapeHtml(song.link).replace(/'/g, "\\'")}', '${getYouTubeLink(song.link, song.title, song.artist)}', this)" class="song-link">🎥 Watch Performance</button>` : ''}
                 </div>
             `).join('');
 
