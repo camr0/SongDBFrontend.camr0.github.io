@@ -47,12 +47,12 @@
 
         .search-section {
             padding: 40px;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
             background: #f8f9fa;
             position: relative;
             z-index: 10;
             overflow: visible;
-            min-height: 300px;
+            min-height: 350px;
         }
 
         .filters {
@@ -462,9 +462,9 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.5.2-dropdown-fix',
-                timestamp: '2025-09-24T15:25:00Z',
-                commit: 'ui789',
+                version: 'v1.5.3-polish',
+                timestamp: '2025-09-24T15:30:00Z',
+                commit: 'clean123',
                 api_deployment: 'Version-13-multi-select',
                 method: 'jsonp-native'
             };
@@ -668,24 +668,10 @@
             return div.innerHTML;
         }
 
-        // Auto-search when filters change (optional)
-        document.getElementById('genre').addEventListener('change', () => {
-            if (hasAnyFilter()) searchSongs();
-        });
+        // Auto-search functionality removed since we're using multi-select dropdowns
+        // Users can manually click "Search Songs" button instead
 
-        document.getElementById('range').addEventListener('change', () => {
-            if (hasAnyFilter()) searchSongs();
-        });
-
-        document.getElementById('difficulty').addEventListener('change', () => {
-            if (hasAnyFilter()) searchSongs();
-        });
-
-        function hasAnyFilter() {
-            return document.getElementById('genre').value || 
-                   document.getElementById('range').value || 
-                   document.getElementById('difficulty').value;
-        }
+        // hasAnyFilter function removed - no longer needed with multi-select
 
         // Load all songs on page load
         window.addEventListener('load', () => {
