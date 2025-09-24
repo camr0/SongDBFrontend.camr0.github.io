@@ -346,18 +346,17 @@
     </div>
 
     <script>
-        // Version 12 deployment with 10 song limit + CORS proxy (cache-busted)
+        // Version 12 deployment with 10 song limit + alternative CORS proxy
         const DIRECT_API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
-        const CACHE_BUST = Date.now();
-        const API_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(DIRECT_API_URL)}&_cb=${CACHE_BUST}`;
+        const API_URL = `https://corsproxy.io/?${encodeURIComponent(DIRECT_API_URL)}`;
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.3.2-debug',
-                timestamp: '2025-09-24T14:45:00Z',
-                commit: 'debug123',
+                version: 'v1.3.3-proxy-fix',
+                timestamp: '2025-09-24T14:50:00Z',
+                commit: 'proxy456',
                 api_deployment: 'Version-12-working',
-                method: 'fetch-via-cors-proxy'
+                method: 'corsproxy.io'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
