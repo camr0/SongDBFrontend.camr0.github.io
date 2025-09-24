@@ -69,19 +69,75 @@
             font-size: 0.95em;
         }
 
-        .filter-group select {
+        .multi-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .multi-select-header {
+            width: 100%;
             padding: 12px 15px;
             border: 2px solid #e1e8ed;
             border-radius: 10px;
             font-size: 1em;
             background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
-        .filter-group select:focus {
-            outline: none;
+        .multi-select-header:hover {
+            border-color: #667eea;
+        }
+
+        .multi-select-header.active {
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .dropdown-arrow {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .multi-select-header.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .multi-select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 14px;
+        }
+
+        .checkbox-option:hover {
+            background-color: #f8f9ff;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
         }
 
         .search-button {
@@ -299,36 +355,75 @@
         <div class="search-section">
             <div class="filters">
                 <div class="filter-group">
-                    <label for="genre">Genre</label>
-                    <select id="genre">
-                        <option value="">All Genres</option>
-                        <option value="Children's">Children's</option>
-                        <option value="Classical & Semi-Classical">Classical & Semi-Classical</option>
-                        <option value="Folk & Regional">Folk & Regional</option>
-                        <option value="Devotional">Devotional</option>
-                    </select>
+                    <label>Genre</label>
+                    <div class="multi-select-container">
+                        <div class="multi-select-header" onclick="toggleDropdown('genre')">
+                            <span id="genre-display">All Genres</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="multi-select-options" id="genre-options" style="display: none;">
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="Children's" onchange="updateMultiSelect('genre')"> Children's
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="Classical & Semi-Classical" onchange="updateMultiSelect('genre')"> Classical & Semi-Classical
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="Folk & Regional" onchange="updateMultiSelect('genre')"> Folk & Regional
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="Devotional" onchange="updateMultiSelect('genre')"> Devotional
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="filter-group">
-                    <label for="range">Voice Range</label>
-                    <select id="range">
-                        <option value="">Any Range</option>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                        <option value="U">Universal</option>
-                    </select>
+                    <label>Voice Range</label>
+                    <div class="multi-select-container">
+                        <div class="multi-select-header" onclick="toggleDropdown('range')">
+                            <span id="range-display">Any Range</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="multi-select-options" id="range-options" style="display: none;">
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="M" onchange="updateMultiSelect('range')"> Male
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="F" onchange="updateMultiSelect('range')"> Female
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="U" onchange="updateMultiSelect('range')"> Universal
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="filter-group">
-                    <label for="difficulty">Difficulty</label>
-                    <select id="difficulty">
-                        <option value="">Any Difficulty</option>
-                        <option value="★☆☆☆☆">★☆☆☆☆ (Beginner)</option>
-                        <option value="★★☆☆☆">★★☆☆☆ (Easy)</option>
-                        <option value="★★★☆☆">★★★☆☆ (Intermediate)</option>
-                        <option value="★★★★☆">★★★★☆ (Advanced)</option>
-                        <option value="★★★★★">★★★★★ (Expert)</option>
-                    </select>
+                    <label>Difficulty</label>
+                    <div class="multi-select-container">
+                        <div class="multi-select-header" onclick="toggleDropdown('difficulty')">
+                            <span id="difficulty-display">Any Difficulty</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="multi-select-options" id="difficulty-options" style="display: none;">
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="★☆☆☆☆" onchange="updateMultiSelect('difficulty')"> ★☆☆☆☆ (Beginner)
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="★★☆☆☆" onchange="updateMultiSelect('difficulty')"> ★★☆☆☆ (Easy)
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="★★★☆☆" onchange="updateMultiSelect('difficulty')"> ★★★☆☆ (Intermediate)
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="★★★★☆" onchange="updateMultiSelect('difficulty')"> ★★★★☆ (Advanced)
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="★★★★★" onchange="updateMultiSelect('difficulty')"> ★★★★★ (Expert)
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -351,18 +446,71 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.4.0-jsonp',
-                timestamp: '2025-09-24T14:55:00Z',
-                commit: 'jsonp789',
-                api_deployment: 'Version-12-working',
+                version: 'v1.5.0-multi-select',
+                timestamp: '2025-09-24T15:10:00Z',
+                commit: 'multi123',
+                api_deployment: 'Version-13-multi-select',
                 method: 'jsonp-native'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
+        // Multi-select functionality
+        function toggleDropdown(type) {
+            const options = document.getElementById(`${type}-options`);
+            const header = options.previousElementSibling;
+            const isVisible = options.style.display !== 'none';
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.multi-select-options').forEach(dropdown => {
+                dropdown.style.display = 'none';
+                dropdown.previousElementSibling.classList.remove('active');
+            });
+            
+            // Toggle current dropdown
+            if (!isVisible) {
+                options.style.display = 'block';
+                header.classList.add('active');
+            }
+        }
+
+        function updateMultiSelect(type) {
+            const checkboxes = document.querySelectorAll(`#${type}-options input[type="checkbox"]`);
+            const display = document.getElementById(`${type}-display`);
+            const checked = Array.from(checkboxes).filter(cb => cb.checked);
+            
+            let displayText;
+            if (checked.length === 0) {
+                if (type === 'genre') displayText = 'All Genres';
+                else if (type === 'range') displayText = 'Any Range';
+                else if (type === 'difficulty') displayText = 'Any Difficulty';
+            } else if (checked.length === 1) {
+                displayText = checked[0].nextSibling.textContent.trim();
+            } else {
+                displayText = `${checked.length} selected`;
+            }
+            
+            display.textContent = displayText;
+        }
+
+        function getSelectedValues(type) {
+            const checkboxes = document.querySelectorAll(`#${type}-options input[type="checkbox"]:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.multi-select-container')) {
+                document.querySelectorAll('.multi-select-options').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                    dropdown.previousElementSibling.classList.remove('active');
+                });
+            }
+        });
+
         async function searchSongs() {
-            const genre = document.getElementById('genre').value;
-            const range = document.getElementById('range').value;
-            const difficulty = document.getElementById('difficulty').value;
+            const genres = getSelectedValues('genre');
+            const ranges = getSelectedValues('range');
+            const difficulties = getSelectedValues('difficulty');
 
             // Show loading state
             const searchButton = document.querySelector('.search-button');
@@ -376,11 +524,11 @@
             resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Finding your perfect songs...</div>';
 
             try {
-                // Build query parameters
+                // Build query parameters with arrays
                 const params = new URLSearchParams();
-                if (genre) params.append('genre', genre);
-                if (range) params.append('range', range);
-                if (difficulty) params.append('difficulty', difficulty);
+                if (genres.length > 0) params.append('genres', JSON.stringify(genres));
+                if (ranges.length > 0) params.append('ranges', JSON.stringify(ranges));
+                if (difficulties.length > 0) params.append('difficulties', JSON.stringify(difficulties));
 
                 // Create unique callback name to avoid conflicts
                 const callbackName = 'songDBCallback_' + Date.now();
@@ -390,7 +538,7 @@
                 
                 const url = `${API_URL}?${params.toString()}`;
                 console.log('JSONP URL:', url);
-                console.log('Search parameters:', { genre, range, difficulty });
+                console.log('Search parameters:', { genres, ranges, difficulties });
 
                 // Create promise-based JSONP call
                 const data = await new Promise((resolve, reject) => {
