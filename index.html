@@ -31,7 +31,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            background: #8B2635;
             color: white;
             padding: 30px;
             text-align: center;
@@ -162,7 +162,7 @@
         .search-button {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #8B2635 0%, #7A1F2B 100%);
+            background: #8B2635;
             color: white;
             border: none;
             border-radius: 10px;
@@ -175,7 +175,7 @@
         .search-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(139, 38, 53, 0.4);
-            background: linear-gradient(135deg, #9B2D3F 0%, #8B2635 100%);
+            background: #9B2D3F;
         }
 
         .search-button:disabled {
@@ -232,9 +232,9 @@
         }
 
         .song-card {
-            background: #8B2635;
-            color: white;
-            border: 1px solid #7A1F2B;
+            background: white;
+            color: #333;
+            border: 1px solid #e1e8ed;
             border-radius: 15px;
             padding: 25px;
             transition: all 0.3s ease;
@@ -244,21 +244,20 @@
 
         .song-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(139, 38, 53, 0.4);
-            border-color: #A52A3A;
-            background: #9B2D3F;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: #8B2635;
         }
 
         .song-title {
             font-size: 1.3em;
             font-weight: 500;
-            color: white;
+            color: #333;
             margin-bottom: 8px;
         }
 
         .song-artist {
             font-size: 1.1em;
-            color: #F0E6E8;
+            color: #666;
             margin-bottom: 15px;
             font-weight: 400;
         }
@@ -273,14 +272,13 @@
         .detail-item {
             text-align: center;
             padding: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #f8f9fa;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .detail-label {
             font-size: 0.8em;
-            color: #E8D7DA;
+            color: #666;
             text-transform: uppercase;
             font-weight: 500;
             margin-bottom: 4px;
@@ -288,7 +286,7 @@
 
         .detail-value {
             font-size: 1em;
-            color: white;
+            color: #333;
             font-weight: 500;
         }
 
@@ -298,7 +296,7 @@
 
         .song-notes {
             font-style: italic;
-            color: #F0E6E8;
+            color: #666;
             margin-bottom: 15px;
             line-height: 1.4;
             font-weight: 300;
@@ -307,7 +305,7 @@
         .song-link {
             display: inline-block;
             padding: 10px 20px;
-            background: linear-gradient(135deg, #A52A3A 0%, #7A1F2B 100%);
+            background: #8B2635;
             color: white;
             text-decoration: none;
             border-radius: 8px;
@@ -322,7 +320,7 @@
         .song-link:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(165, 42, 58, 0.4);
-            background: linear-gradient(135deg, #B53142 0%, #8B2635 100%);
+            background: #9B2D3F;
         }
 
         .song-link:disabled {
@@ -343,7 +341,7 @@
 
         .pagination button {
             padding: 12px 24px;
-            background: linear-gradient(135deg, #8B2635 0%, #7A1F2B 100%);
+            background: #8B2635;
             color: white;
             border: none;
             border-radius: 25px;
@@ -356,7 +354,7 @@
         .pagination button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(139, 38, 53, 0.4);
-            background: linear-gradient(135deg, #9B2D3F 0%, #8B2635 100%);
+            background: #9B2D3F;
         }
 
         .pagination button:disabled {
@@ -427,7 +425,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎵 UrmiMusic Song Database</h1>
+            <h1>UrmiMusic Song Database</h1>
             <p>Find the perfect song for your skill level and voice range</p>
         </div>
 
@@ -499,19 +497,19 @@
                         </div>
                         <div class="multi-select-options" id="difficulty-options" style="display: none;">
                             <label class="checkbox-option">
-                                <input type="checkbox" value="1" onchange="updateMultiSelect('difficulty')"> ★☆☆☆☆ (Beginner)
+                                <input type="checkbox" value="1" onchange="updateMultiSelect('difficulty')"> ★☆☆☆☆
                             </label>
                             <label class="checkbox-option">
-                                <input type="checkbox" value="2" onchange="updateMultiSelect('difficulty')"> ★★☆☆☆ (Easy)
+                                <input type="checkbox" value="2" onchange="updateMultiSelect('difficulty')"> ★★☆☆☆
                             </label>
                             <label class="checkbox-option">
-                                <input type="checkbox" value="3" onchange="updateMultiSelect('difficulty')"> ★★★☆☆ (Intermediate)
+                                <input type="checkbox" value="3" onchange="updateMultiSelect('difficulty')"> ★★★☆☆
                             </label>
                             <label class="checkbox-option">
-                                <input type="checkbox" value="4" onchange="updateMultiSelect('difficulty')"> ★★★★☆ (Advanced)
+                                <input type="checkbox" value="4" onchange="updateMultiSelect('difficulty')"> ★★★★☆
                             </label>
                             <label class="checkbox-option">
-                                <input type="checkbox" value="5" onchange="updateMultiSelect('difficulty')"> ★★★★★ (Expert)
+                                <input type="checkbox" value="5" onchange="updateMultiSelect('difficulty')"> ★★★★★
                             </label>
                         </div>
                     </div>
@@ -519,7 +517,7 @@
             </div>
 
             <button class="search-button" onclick="searchSongs()">
-                <span id="search-text">🔍 Search Songs</span>
+                <span id="search-text">Search Songs</span>
             </button>
         </div>
 
@@ -546,13 +544,13 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.7.1-urmi-theme',
-                timestamp: '2025-09-24T16:30:00Z',
-                commit: 'theme123',
+                version: 'v1.7.2-clean-design',
+                timestamp: '2025-09-24T16:35:00Z',
+                commit: 'clean123',
                 api_deployment: 'Version-17-100-songs',
-                method: 'jsonp-native + secure-backend-youtube + 25-per-page + urmi-red-theme'
+                method: 'jsonp-native + secure-backend-youtube + 25-per-page + clean-red-theme'
             };
-        console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
+        console.log('UrmiMusic Database loaded:', BUILD_INFO);
 
         // YouTube URL cache to avoid repeated API calls
         const youtubeUrlCache = new Map();
@@ -593,11 +591,11 @@
                 });
                 
                 if (data.success && data.youtube_url) {
-                    console.log(`🎥 Found exact video for "${title}": ${data.youtube_url}`);
+                    console.log(`Found exact video for "${title}": ${data.youtube_url}`);
                     return data.youtube_url;
                 }
                 
-                console.log(`⚠️ No exact video found for "${title}"`);
+                console.log(`No exact video found for "${title}"`);
                 return null;
             } catch (error) {
                 console.error('YouTube search error:', error);
@@ -608,14 +606,14 @@
         async function watchPerformance(songTitle, fallbackUrl, buttonElement) {
             // Check cache first
             if (youtubeUrlCache.has(songTitle)) {
-                console.log(`📦 Using cached URL for "${songTitle}"`);
+                console.log(`Using cached URL for "${songTitle}"`);
                 window.open(youtubeUrlCache.get(songTitle), '_blank');
                 return;
             }
             
             // Show loading state
             const originalText = buttonElement.textContent;
-            buttonElement.textContent = '🔍 Finding video...';
+            buttonElement.textContent = 'Finding video...';
             buttonElement.disabled = true;
             
             try {
@@ -627,7 +625,7 @@
                     window.open(exactUrl, '_blank');
                 } else {
                     // Fallback to search URL
-                    console.log(`🔍 Using fallback search for "${songTitle}"`);
+                    console.log(`Using fallback search for "${songTitle}"`);
                     window.open(fallbackUrl, '_blank');
                 }
             } catch (error) {
@@ -767,7 +765,7 @@
             } finally {
                 // Reset button state
                 searchButton.disabled = false;
-                searchText.innerHTML = '🔍 Search Songs';
+                searchText.innerHTML = 'Search Songs';
             }
         }
 
@@ -828,7 +826,7 @@
 
                     ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
                     
-                    ${song.link ? `<button onclick="watchPerformance('${escapeHtml(song.link).replace(/'/g, "\\'")}', '${getYouTubeLink(song.link, song.title, song.artist)}', this)" class="song-link">🎥 Watch Performance</button>` : ''}
+                    ${song.link ? `<button onclick="watchPerformance('${escapeHtml(song.link).replace(/'/g, "\\'")}', '${getYouTubeLink(song.link, song.title, song.artist)}', this)" class="song-link">Watch Performance</button>` : ''}
                 </div>
             `).join('');
 
@@ -868,9 +866,9 @@
 
         function getRangeDisplay(range) {
             const ranges = {
-                'M': '♂️ Male',
-                'F': '♀️ Female', 
-                'U': '🎭 Universal'
+                'M': 'Male',
+                'F': 'Female', 
+                'U': 'Universal'
             };
             return ranges[range] || range;
         }
