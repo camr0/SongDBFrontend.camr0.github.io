@@ -9,28 +9,54 @@
     <div id="result"></div>
 
     <script>
-        async function testAPI() {
-            console.log('🧪 Testing API after permission refresh...');
-            console.log('🌐 Origin:', window.location.origin);
-            console.log('📍 Full URL:', window.location.href);
+        // Try JSONP to bypass the redirect bug
+        function testAPIWithJSONP() {
+            console.log('🧪 Testing API with JSONP to bypass redirect...');
             
+            const script = document.createElement('script');
+            const callbackName = 'jsonp_callback_' + Date.now();
+            
+            // Create global callback
+            window[callbackName] = function(data) {
+                console.log('📊 JSONP Data received:', data);
+                document.getElementById('result').innerHTML = `✅ JSONP SUCCESS: Found ${data.count} songs!`;
+                document.getElementById('result').style.color = 'green';
+                
+                // Cleanup
+                document.head.removeChild(script);
+                delete window[callbackName];
+            };
+            
+            // Create script tag with callback
+            script.src = `https://script.google.com/macros/s/AKfycbwDOCzwClNGd7zhFzHlkRmssv5nJ_Cw-C_GtadYB_8UEXCB5wItTpTRK23Vsx9Qvfcs/exec?callback=${callbackName}`;
+            script.onerror = function() {
+                console.error('❌ JSONP failed');
+                document.getElementById('result').innerHTML = '❌ JSONP failed';
+                document.getElementById('result').style.color = 'red';
+                document.head.removeChild(script);
+                delete window[callbackName];
+            };
+            
+            document.head.appendChild(script);
+        }
+
+        async function testAPI() {
+            console.log('🧪 Testing both fetch and JSONP...');
+            console.log('🌐 Origin:', window.location.origin);
+            
+            // Try fetch first
             try {
-                const apiUrl = 'https://script.google.com/macros/s/AKfycbxK0Ja9rVcO_yy1YoP4zsGiuMiv-qKpWiSNqW3dyh_JU2JhJuhnJ5GwvCWQYLw9pnd3/exec';
-                console.log('🚀 Fetching:', apiUrl);
+                const apiUrl = 'https://script.google.com/macros/s/AKfycbwDOCzwClNGd7zhFzHlkRmssv5nJ_Cw-C_GtadYB_8UEXCB5wItTpTRK23Vsx9Qvfcs/exec';
+                console.log('🚀 Trying fetch first:', apiUrl);
                 
                 const response = await fetch(apiUrl);
-                console.log('✅ Response received:', response.status, response.statusText);
-                console.log('📋 Response headers:', [...response.headers.entries()]);
-                
                 const data = await response.json();
-                console.log('📊 Data received:', data);
-                document.getElementById('result').innerHTML = `✅ SUCCESS: Found ${data.count} songs!`;
+                console.log('📊 Fetch success:', data);
+                document.getElementById('result').innerHTML = `✅ FETCH SUCCESS: Found ${data.count} songs!`;
                 document.getElementById('result').style.color = 'green';
             } catch (error) {
-                console.error('❌ Error details:', error);
-                console.error('❌ Error stack:', error.stack);
-                document.getElementById('result').innerHTML = `❌ ERROR: ${error.message}`;
-                document.getElementById('result').style.color = 'red';
+                console.log('❌ Fetch failed, trying JSONP:', error.message);
+                testAPIWithJSONP();
             }
         }
     </script>
