@@ -359,7 +359,8 @@
         };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
-        async function searchSongs() {
+        // Use JSONP to bypass CORS issues
+        function searchSongs() {
             const genre = document.getElementById('genre').value;
             const range = document.getElementById('range').value;
             const difficulty = document.getElementById('difficulty').value;
@@ -375,52 +376,79 @@
             resultsSection.style.display = 'block';
             resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Finding your perfect songs...</div>';
 
-            try {
-                // Build query parameters
-                const params = new URLSearchParams();
-                if (genre) params.append('genre', genre);
-                if (range) params.append('range', range);
-                if (difficulty) params.append('difficulty', difficulty);
+            console.log('Search parameters:', { genre, range, difficulty });
+            
+            // Add explicit check for empty parameters
+            if (!genre && !range && !difficulty) {
+                console.log('⚠️ No filters applied - will return all songs');
+            } else {
+                console.log('🔍 Filters applied:', { 
+                    genre: genre || 'Any', 
+                    range: range || 'Any', 
+                    difficulty: difficulty || 'Any' 
+                });
+            }
 
-                const url = `${API_URL}&${params.toString()}`;
-                console.log('Fetching:', url);
-                console.log('Search parameters:', { genre, range, difficulty });
+            // Create unique callback name
+            const callbackName = 'songDBCallback_' + Date.now();
+            
+            // Create global callback function
+            window[callbackName] = function(data) {
+                console.log('JSONP Response:', data);
                 
-                // Add explicit check for empty parameters
-                if (!genre && !range && !difficulty) {
-                    console.log('⚠️ No filters applied - will return all songs');
-                } else {
-                    console.log('🔍 Filters applied:', { 
-                        genre: genre || 'Any', 
-                        range: range || 'Any', 
-                        difficulty: difficulty || 'Any' 
-                    });
+                try {
+                    if (data.success) {
+                        console.log(`Found ${data.count} songs:`, data.songs);
+                        displayResults(data.songs, data.count);
+                    } else {
+                        throw new Error(data.error || 'Unknown error occurred');
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                    resultsContainer.innerHTML = `
+                        <div class="error-message">
+                            <strong>Oops!</strong> There was an error searching for songs. Please try again.
+                            <br><small>Error: ${error.message}</small>
+                        </div>
+                    `;
+                } finally {
+                    // Cleanup
+                    document.head.removeChild(script);
+                    delete window[callbackName];
+                    
+                    // Reset button state
+                    searchButton.disabled = false;
+                    searchText.innerHTML = '🔍 Search Songs';
                 }
+            };
 
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('API Response:', data);
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (genre) params.append('genre', genre);
+            if (range) params.append('range', range);
+            if (difficulty) params.append('difficulty', difficulty);
+            params.append('callback', callbackName);
 
-                if (data.success) {
-                    console.log(`Found ${data.count} songs:`, data.songs);
-                    displayResults(data.songs, data.count);
-                } else {
-                    throw new Error(data.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                console.error('Search error:', error);
+            // Create script tag for JSONP request
+            const script = document.createElement('script');
+            script.src = `${API_URL}?${params.toString()}`;
+            script.onerror = function() {
+                console.error('JSONP request failed');
                 resultsContainer.innerHTML = `
                     <div class="error-message">
-                        <strong>Oops!</strong> There was an error searching for songs. Please try again.
-                        <br><small>Error: ${error.message}</small>
+                        <strong>Oops!</strong> There was an error connecting to the server. Please try again.
                     </div>
                 `;
-            } finally {
+                document.head.removeChild(script);
+                delete window[callbackName];
+                
                 // Reset button state
                 searchButton.disabled = false;
                 searchText.innerHTML = '🔍 Search Songs';
-            }
+            };
+
+            console.log('JSONP URL:', script.src);
+            document.head.appendChild(script);
         }
 
         function displayResults(songs, count) {
