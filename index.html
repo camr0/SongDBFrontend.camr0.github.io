@@ -826,7 +826,7 @@
 
                     ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
                     
-                    ${song.link ? `<button onclick="watchPerformance('${escapeHtml(song.link).replace(/'/g, "\\'")}', '${getYouTubeLink(song.link, song.title, song.artist)}', this)" class="song-link">Watch Performance</button>` : ''}
+                    ${song.link ? `<button onclick="watchPerformance('${escapeHtml(song.link).replace(/'/g, "\\'")}', '${getYouTubeLink(song.link, song.title, song.artist)}', this)" class="song-link">View Video</button>` : ''}
                 </div>
             `).join('');
 
