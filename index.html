@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrmiMusic Song Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .filter-group select {
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            padding: 0 40px 40px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        .results-count {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .song-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .song-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .song-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .song-artist {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .song-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .difficulty-stars {
+            color: #ffd700;
+        }
+
+        .song-notes {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .song-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .song-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .search-section, .results-section {
+                padding: 20px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .song-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 UrmiMusic Song Database</h1>
+            <p>Find the perfect song for your skill level and voice range</p>
+        </div>
+
+        <div class="search-section">
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="genre">Genre</label>
+                    <select id="genre">
+                        <option value="">All Genres</option>
+                        <option value="Children's">Children's</option>
+                        <option value="Classical">Classical</option>
+                        <option value="Folk">Folk</option>
+                        <option value="Romantic">Romantic</option>
+                        <option value="Devotional">Devotional</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="range">Voice Range</label>
+                    <select id="range">
+                        <option value="">Any Range</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="U">Universal</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty">
+                        <option value="">Any Difficulty</option>
+                        <option value="★☆☆☆☆">★☆☆☆☆ (Beginner)</option>
+                        <option value="★★☆☆☆">★★☆☆☆ (Easy)</option>
+                        <option value="★★★☆☆">★★★☆☆ (Intermediate)</option>
+                        <option value="★★★★☆">★★★★☆ (Advanced)</option>
+                        <option value="★★★★★">★★★★★ (Expert)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="search-button" onclick="searchSongs()">
+                <span id="search-text">🔍 Search Songs</span>
+            </button>
+        </div>
+
+        <div class="results-section" id="results-section" style="display: none;">
+            <div class="results-header">
+                <div class="results-count" id="results-count"></div>
+            </div>
+            <div id="results-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLi0uPI8WSM2fLnC3SadYhh8etLozGwWEUDRMZdzwSSvLg_YBpiqJlAA6nsZffxeyDVzYvPAGxw6y_i4TiyknzAuiL6lFiMtkDo2PKYLGrdIarxOcWKT958_3qRb9i9ZpARJ-GUow-JHdwn1qBtVeqRFUDNJiv0P9llmudesE_40l226eORijrndCbPDx41ytrmagMKqVaR83RmC9jQGxzh45M68eJD4_asXtQTPQsE4htYXiLaFKvtZ0FIp2vIsUgyY1gGj6vxLHTGJKHLIznAJwzX8CGvL05nlQ9jiZTSNP9bsij9rdoiezi0O4OK1PX-qK7Fm&lib=MH0_AQUMjPyK3sii-h8zKOxh_e8d90qgN';
+
+        async function searchSongs() {
+            const genre = document.getElementById('genre').value;
+            const range = document.getElementById('range').value;
+            const difficulty = document.getElementById('difficulty').value;
+
+            // Show loading state
+            const searchButton = document.querySelector('.search-button');
+            const searchText = document.getElementById('search-text');
+            const resultsSection = document.getElementById('results-section');
+            const resultsContainer = document.getElementById('results-container');
+
+            searchButton.disabled = true;
+            searchText.innerHTML = '<span class="spinner"></span>Searching...';
+            resultsSection.style.display = 'block';
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Finding your perfect songs...</div>';
+
+            try {
+                // Build query parameters
+                const params = new URLSearchParams();
+                if (genre) params.append('genre', genre);
+                if (range) params.append('range', range);
+                if (difficulty) params.append('difficulty', difficulty);
+
+                const url = `${API_URL}&${params.toString()}`;
+                console.log('Fetching:', url);
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data.songs, data.count);
+                } else {
+                    throw new Error(data.error || 'Unknown error occurred');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsContainer.innerHTML = `
+                    <div class="error-message">
+                        <strong>Oops!</strong> There was an error searching for songs. Please try again.
+                        <br><small>Error: ${error.message}</small>
+                    </div>
+                `;
+            } finally {
+                // Reset button state
+                searchButton.disabled = false;
+                searchText.innerHTML = '🔍 Search Songs';
+            }
+        }
+
+        function displayResults(songs, count) {
+            const resultsContainer = document.getElementById('results-container');
+            const resultsCount = document.getElementById('results-count');
+
+            resultsCount.textContent = `Found ${count} song${count !== 1 ? 's' : ''}`;
+
+            if (songs.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <h3>No songs found</h3>
+                        <p>Try adjusting your search criteria to find more songs.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const songsHTML = songs.map(song => `
+                <div class="song-card">
+                    <div class="song-title">${escapeHtml(song.title)}</div>
+                    <div class="song-artist">by ${escapeHtml(song.artist)}</div>
+                    
+                    <div class="song-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Genre</div>
+                            <div class="detail-value">${escapeHtml(song.genre)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Range</div>
+                            <div class="detail-value">${getRangeDisplay(song.range)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Difficulty</div>
+                            <div class="detail-value difficulty-stars">${getDifficultyStars(song.difficulty)}</div>
+                        </div>
+                    </div>
+
+                    ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
+                    
+                    ${song.link ? `<a href="${escapeHtml(song.link)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
+                </div>
+            `).join('');
+
+            resultsContainer.innerHTML = `<div class="song-grid">${songsHTML}</div>`;
+        }
+
+        function getRangeDisplay(range) {
+            const ranges = {
+                'M': '♂️ Male',
+                'F': '♀️ Female', 
+                'U': '🎭 Universal'
+            };
+            return ranges[range] || range;
+        }
+
+        function getDifficultyStars(difficulty) {
+            if (typeof difficulty === 'number') {
+                return '★'.repeat(difficulty) + '☆'.repeat(5 - difficulty);
+            }
+            return difficulty || '☆☆☆☆☆';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-search when filters change (optional)
+        document.getElementById('genre').addEventListener('change', () => {
+            if (hasAnyFilter()) searchSongs();
+        });
+
+        document.getElementById('range').addEventListener('change', () => {
+            if (hasAnyFilter()) searchSongs();
+        });
+
+        document.getElementById('difficulty').addEventListener('change', () => {
+            if (hasAnyFilter()) searchSongs();
+        });
+
+        function hasAnyFilter() {
+            return document.getElementById('genre').value || 
+                   document.getElementById('range').value || 
+                   document.getElementById('difficulty').value;
+        }
+
+        // Load all songs on page load
+        window.addEventListener('load', () => {
+            // Optional: Auto-load some results
+            // searchSongs();
+        });
+    </script>
+</body>
+</html>
