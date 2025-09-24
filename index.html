@@ -347,7 +347,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLi0uPI8WSM2fLnC3SadYhh8etLozGwWEUDRMZdzwSSvLg_YBpiqJlAA6nsZffxeyDVzYvPAGxw6y_i4TiyknzAuiL6lFiMtkDo2PKYLGrdIarxOcWKT958_3qRb9i9ZpARJ-GUow-JHdwn1qBtVeqRFUDNJiv0P9llmudesE_40l226eORijrndCbPDx41ytrmagMKqVaR83RmC9jQGxzh45M68eJD4_asXtQTPQsE4htYXiLaFKvtZ0FIp2vIsUgyY1gGj6vxLHTGJKHLIznAJwzX8CGvL05nlQ9jiZTSNP9bsij9rdoiezi0O4OK1PX-qK7Fm&lib=MH0_AQUMjPyK3sii-h8zKOxh_e8d90qgN';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxfu2CHgq-_crES7r_UKc0vlYU6ABCM35-byhPfuGnxsZSqit4UfvxC8urDXl8WrDgy/exec';
 
         async function searchSongs() {
             const genre = document.getElementById('genre').value;
@@ -375,6 +375,17 @@
                 const url = `${API_URL}&${params.toString()}`;
                 console.log('Fetching:', url);
                 console.log('Search parameters:', { genre, range, difficulty });
+                
+                // Add explicit check for empty parameters
+                if (!genre && !range && !difficulty) {
+                    console.log('⚠️ No filters applied - will return all songs');
+                } else {
+                    console.log('🔍 Filters applied:', { 
+                        genre: genre || 'Any', 
+                        range: range || 'Any', 
+                        difficulty: difficulty || 'Any' 
+                    });
+                }
 
                 const response = await fetch(url);
                 const data = await response.json();
