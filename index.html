@@ -474,10 +474,10 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.5.8-real-urls',
-                timestamp: '2025-09-24T15:55:00Z',
-                commit: 'urls789',
-                api_deployment: 'Version-14-rich-text',
+                version: 'v1.5.9-smart-search',
+                timestamp: '2025-09-24T16:00:00Z',
+                commit: 'search123',
+                api_deployment: 'Version-15-simplified',
                 method: 'jsonp-native'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
@@ -651,7 +651,7 @@
 
                     ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
                     
-                    ${song.link ? `<a href="${escapeHtml(song.link)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
+                    ${song.link ? `<a href="${getYouTubeLink(song.link, song.title, song.artist)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
                 </div>
             `).join('');
 
@@ -680,7 +680,25 @@
             return div.innerHTML;
         }
 
-        // getYouTubeLink function removed - now getting actual URLs from Google Sheets API
+        function getYouTubeLink(link, title, artist) {
+            // If it's already a valid URL, use it as-is
+            if (link.startsWith('http://') || link.startsWith('https://')) {
+                return escapeHtml(link);
+            }
+            
+            // Check if the link looks like a YouTube title that we can convert to a search
+            if (link.includes('YouTube') || link.includes('youtube')) {
+                // Remove "- YouTube" from the end and use it as search query
+                const searchQuery = link.replace(/\s*-?\s*YouTube?\s*$/i, '').trim();
+                const encodedQuery = encodeURIComponent(searchQuery);
+                return `https://www.youtube.com/results?search_query=${encodedQuery}`;
+            }
+            
+            // If it doesn't look like YouTube title, create search from song info
+            const searchQuery = `${title} ${artist}`.trim();
+            const encodedQuery = encodeURIComponent(searchQuery);
+            return `https://www.youtube.com/results?search_query=${encodedQuery}`;
+        }
 
         // Auto-search functionality removed since we're using multi-select dropdowns
         // Users can manually click "Search Songs" button instead
