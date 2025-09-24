@@ -374,11 +374,15 @@
 
                 const url = `${API_URL}&${params.toString()}`;
                 console.log('Fetching:', url);
+                console.log('Search parameters:', { genre, range, difficulty });
 
                 const response = await fetch(url);
                 const data = await response.json();
+                
+                console.log('API Response:', data);
 
                 if (data.success) {
+                    console.log(`Found ${data.count} songs:`, data.songs);
                     displayResults(data.songs, data.count);
                 } else {
                     throw new Error(data.error || 'Unknown error occurred');
