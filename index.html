@@ -303,9 +303,8 @@
                     <select id="genre">
                         <option value="">All Genres</option>
                         <option value="Children's">Children's</option>
-                        <option value="Classical">Classical</option>
-                        <option value="Folk">Folk</option>
-                        <option value="Romantic">Romantic</option>
+                        <option value="Classical & Semi-Classical">Classical & Semi-Classical</option>
+                        <option value="Folk & Regional">Folk & Regional</option>
                         <option value="Devotional">Devotional</option>
                     </select>
                 </div>
@@ -352,13 +351,13 @@
         const API_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(DIRECT_API_URL)}`;
         
         // Build info for debugging
-        const BUILD_INFO = {
-            version: 'v1.3.0-limited',
-            timestamp: '2025-09-24T13:59:00Z',
-            commit: '7152358',
-            api_deployment: 'Version-10-limited-10-songs',
-            method: 'fetch-via-cors-proxy'
-        };
+            const BUILD_INFO = {
+                version: 'v1.3.1-fixed',
+                timestamp: '2025-09-24T14:15:00Z',
+                commit: 'abc123f',
+                api_deployment: 'Version-10-limited-10-songs',
+                method: 'fetch-via-cors-proxy'
+            };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
         async function searchSongs() {
