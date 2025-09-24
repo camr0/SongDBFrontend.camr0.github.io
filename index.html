@@ -47,7 +47,12 @@
 
         .search-section {
             padding: 40px;
+            padding-bottom: 60px;
             background: #f8f9fa;
+            position: relative;
+            z-index: 10;
+            overflow: visible;
+            min-height: 300px;
         }
 
         .filters {
@@ -118,8 +123,19 @@
             border-radius: 0 0 10px 10px;
             max-height: 200px;
             overflow-y: auto;
-            z-index: 1000;
+            z-index: 9999;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Ensure dropdowns can extend beyond container boundaries */
+        .filters {
+            position: relative;
+            overflow: visible;
+        }
+        
+        .filter-group {
+            position: relative;
+            overflow: visible;
         }
 
         .checkbox-option {
@@ -446,9 +462,9 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.5.1-difficulty-fix',
-                timestamp: '2025-09-24T15:20:00Z',
-                commit: 'diff456',
+                version: 'v1.5.2-dropdown-fix',
+                timestamp: '2025-09-24T15:25:00Z',
+                commit: 'ui789',
                 api_deployment: 'Version-13-multi-select',
                 method: 'jsonp-native'
             };
