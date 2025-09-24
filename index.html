@@ -347,8 +347,8 @@
     </div>
 
     <script>
-        // Use CORS proxy to bypass Google's broken CORS implementation
-        const DIRECT_API_URL = 'https://script.google.com/macros/s/AKfycbwDOCzwClNGd7zhFzHlkRmssv5nJ_Cw-C_GtadYB_8UEXCB5wItTpTRK23Vsx9Qvfcs/exec';
+        // Use CORS proxy with your latest working deployment
+        const DIRECT_API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
         const API_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(DIRECT_API_URL)}`;
         
         // Build info for debugging
@@ -356,7 +356,7 @@
             version: 'v1.2.0-cors-proxy',
             timestamp: '2025-09-24T13:55:00Z',
             commit: '3dd7e42',
-            api_deployment: 'Version-7-via-proxy',
+            api_deployment: 'Version-10-via-proxy',
             method: 'fetch-via-cors-proxy'
         };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
