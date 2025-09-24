@@ -474,10 +474,10 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.5.7-youtube-fix',
-                timestamp: '2025-09-24T15:50:00Z',
-                commit: 'links456',
-                api_deployment: 'Version-13-multi-select',
+                version: 'v1.5.8-real-urls',
+                timestamp: '2025-09-24T15:55:00Z',
+                commit: 'urls789',
+                api_deployment: 'Version-14-rich-text',
                 method: 'jsonp-native'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
@@ -651,7 +651,7 @@
 
                     ${song.notes ? `<div class="song-notes">${escapeHtml(song.notes)}</div>` : ''}
                     
-                    ${song.link ? `<a href="${getYouTubeLink(song.link, song.title, song.artist)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
+                    ${song.link ? `<a href="${escapeHtml(song.link)}" target="_blank" class="song-link">🎥 Watch Performance</a>` : ''}
                 </div>
             `).join('');
 
@@ -680,18 +680,7 @@
             return div.innerHTML;
         }
 
-        function getYouTubeLink(link, title, artist) {
-            // If it's already a valid URL, use it as-is
-            if (link.startsWith('http://') || link.startsWith('https://')) {
-                return escapeHtml(link);
-            }
-            
-            // If it looks like a YouTube title, create a search URL
-            // Use the title and artist for a more accurate search
-            const searchQuery = `${title} ${artist}`.trim();
-            const encodedQuery = encodeURIComponent(searchQuery);
-            return `https://www.youtube.com/results?search_query=${encodedQuery}`;
-        }
+        // getYouTubeLink function removed - now getting actual URLs from Google Sheets API
 
         // Auto-search functionality removed since we're using multi-select dropdowns
         // Users can manually click "Search Songs" button instead
