@@ -348,6 +348,15 @@
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxK0Ja9rVcO_yy1YoP4zsGiuMiv-qKpWiSNqW3dyh_JU2JhJuhnJ5GwvCWQYLw9pnd3/exec';
+        
+        // Build info for debugging
+        const BUILD_INFO = {
+            version: 'v1.2.0',
+            timestamp: '2025-09-24T13:17:00Z',
+            commit: '8a54aa6',
+            api_deployment: 'Version-6-AKfycbxK0Ja9rVcO'
+        };
+        console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
         async function searchSongs() {
             const genre = document.getElementById('genre').value;
