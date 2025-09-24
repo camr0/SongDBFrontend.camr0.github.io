@@ -482,41 +482,60 @@
         // Version 12 deployment with 10 song limit + JSONP (no proxy needed)
         const API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
         
-        // YouTube API configuration
-        const YOUTUBE_API_KEY = 'AIzaSyB7TxToNs7tJlrudx0MLqfKcMaNoTqnkTM';
+        // YouTube API moved to Google Apps Script backend for security
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.6.0-youtube-api',
-                timestamp: '2025-09-24T16:10:00Z',
-                commit: 'api123',
-                api_deployment: 'Version-15-simplified',
-                method: 'jsonp-native + youtube-api'
+                version: 'v1.6.1-secure-api',
+                timestamp: '2025-09-24T16:15:00Z',
+                commit: 'secure123',
+                api_deployment: 'Version-16-secure-youtube',
+                method: 'jsonp-native + secure-backend-youtube'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
         // YouTube URL cache to avoid repeated API calls
         const youtubeUrlCache = new Map();
 
-        // YouTube API functions
+        // YouTube search via secure backend
         async function searchYouTubeVideo(title) {
             try {
-                const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`"${title}"`)}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
+                // Call our Google Apps Script backend to search YouTube securely
+                const callbackName = 'youtubeCallback_' + Date.now();
+                const params = new URLSearchParams();
+                params.append('action', 'youtube_search');
+                params.append('title', title);
+                params.append('callback', callbackName);
                 
-                const response = await fetch(searchUrl);
-                const data = await response.json();
+                const url = `${API_URL}?${params.toString()}`;
                 
-                if (data.items && data.items[0]) {
-                    const videoId = data.items[0].id.videoId;
-                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-                    console.log(`🎥 Found exact video for "${title}": ${videoUrl}`);
-                    return videoUrl;
+                const data = await new Promise((resolve, reject) => {
+                    window[callbackName] = function(response) {
+                        resolve(response);
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                    };
+
+                    const script = document.createElement('script');
+                    script.src = url;
+                    script.onerror = function() {
+                        reject(new Error('YouTube search request failed'));
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                    };
+                    
+                    document.head.appendChild(script);
+                });
+                
+                if (data.success && data.youtube_url) {
+                    console.log(`🎥 Found exact video for "${title}": ${data.youtube_url}`);
+                    return data.youtube_url;
                 }
                 
                 console.log(`⚠️ No exact video found for "${title}"`);
                 return null;
             } catch (error) {
-                console.error('YouTube API error:', error);
+                console.error('YouTube search error:', error);
                 return null;
             }
         }
