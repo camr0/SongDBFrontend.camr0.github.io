@@ -346,17 +346,16 @@
     </div>
 
     <script>
-        // Version 12 deployment with 10 song limit + alternative CORS proxy
-        const DIRECT_API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
-        const API_URL = `https://corsproxy.io/?${encodeURIComponent(DIRECT_API_URL)}`;
+        // Version 12 deployment with 10 song limit + JSONP (no proxy needed)
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxb7tR4h3x9YErM-e4mJusVl9oRfLkaqytgVPcZnyGZAklmx3jycd2Ouj0bo3SD6u7u/exec';
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.3.3-proxy-fix',
-                timestamp: '2025-09-24T14:50:00Z',
-                commit: 'proxy456',
+                version: 'v1.4.0-jsonp',
+                timestamp: '2025-09-24T14:55:00Z',
+                commit: 'jsonp789',
                 api_deployment: 'Version-12-working',
-                method: 'corsproxy.io'
+                method: 'jsonp-native'
             };
         console.log('🚀 UrmiMusic Database loaded:', BUILD_INFO);
 
@@ -383,13 +382,37 @@
                 if (range) params.append('range', range);
                 if (difficulty) params.append('difficulty', difficulty);
 
-                const url = `${API_URL}&${params.toString()}`;
-            console.log('Fetching:', url);
-            console.log('Search parameters:', { genre, range, difficulty });
-            console.log('Direct API URL (before proxy):', DIRECT_API_URL + '?' + params.toString());
+                // Create unique callback name to avoid conflicts
+                const callbackName = 'songDBCallback_' + Date.now();
+                
+                // Add callback parameter for JSONP
+                params.append('callback', callbackName);
+                
+                const url = `${API_URL}?${params.toString()}`;
+                console.log('JSONP URL:', url);
+                console.log('Search parameters:', { genre, range, difficulty });
 
-                const response = await fetch(url);
-                const data = await response.json();
+                // Create promise-based JSONP call
+                const data = await new Promise((resolve, reject) => {
+                    // Create global callback function
+                    window[callbackName] = function(response) {
+                        resolve(response);
+                        // Cleanup
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                    };
+
+                    // Create script tag for JSONP request
+                    const script = document.createElement('script');
+                    script.src = url;
+                    script.onerror = function() {
+                        reject(new Error('JSONP request failed'));
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                    };
+                    
+                    document.head.appendChild(script);
+                });
                 
                 console.log('API Response:', data);
 
