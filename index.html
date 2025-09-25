@@ -58,6 +58,12 @@
             overflow: visible;
             min-height: 600px;
         }
+        
+        /* Reduce spacing when results are shown */
+        .search-section.has-results {
+            min-height: auto;
+            padding-bottom: 40px;
+        }
 
         .filters {
             display: grid;
@@ -545,11 +551,11 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.7.6-clean-console',
-                timestamp: '2025-09-24T16:47:00Z',
-                commit: 'console123',
+                version: 'v1.7.7-dynamic-spacing',
+                timestamp: '2025-09-24T16:50:00Z',
+                commit: 'dynamic123',
                 api_deployment: 'Version-17-100-songs',
-                method: 'jsonp-native + secure-backend-youtube + 25-per-page + clean-debug-output'
+                method: 'jsonp-native + secure-backend-youtube + 25-per-page + dynamic-space-optimization'
             };
         console.log('UrmiMusic Database loaded:', BUILD_INFO);
 
@@ -774,6 +780,10 @@
             // Store all songs globally for pagination
             allSongs = songs;
             currentPage = 1;
+            
+            // Add class to reduce search section spacing when results are shown
+            const searchSection = document.querySelector('.search-section');
+            searchSection.classList.add('has-results');
             
             const resultsCount = document.getElementById('results-count');
             resultsCount.textContent = `Found ${count} song${count !== 1 ? 's' : ''}`;
