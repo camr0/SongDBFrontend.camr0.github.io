@@ -545,11 +545,11 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.7.5-optimized-spacing',
-                timestamp: '2025-09-24T16:45:00Z',
-                commit: 'optimal123',
+                version: 'v1.7.6-clean-console',
+                timestamp: '2025-09-24T16:47:00Z',
+                commit: 'console123',
                 api_deployment: 'Version-17-100-songs',
-                method: 'jsonp-native + secure-backend-youtube + 25-per-page + optimized-dropdown-spacing'
+                method: 'jsonp-native + secure-backend-youtube + 25-per-page + clean-debug-output'
             };
         console.log('UrmiMusic Database loaded:', BUILD_INFO);
 
@@ -747,10 +747,10 @@
                     document.head.appendChild(script);
                 });
                 
-                console.log('API Response:', data);
+                // console.log('API Response:', data);
 
                 if (data.success) {
-                    console.log(`Found ${data.count} songs:`, data.songs);
+                    // console.log(`Found ${data.count} songs:`, data.songs);
                     displayResults(data.songs, data.count);
                 } else {
                     throw new Error(data.error || 'Unknown error occurred');
