@@ -551,11 +551,11 @@
         
         // Build info for debugging
             const BUILD_INFO = {
-                version: 'v1.7.7-dynamic-spacing',
-                timestamp: '2025-09-24T16:50:00Z',
-                commit: 'dynamic123',
+                version: 'v1.7.8-instant-compact',
+                timestamp: '2025-09-24T16:52:00Z',
+                commit: 'instant123',
                 api_deployment: 'Version-17-100-songs',
-                method: 'jsonp-native + secure-backend-youtube + 25-per-page + dynamic-space-optimization'
+                method: 'jsonp-native + secure-backend-youtube + 25-per-page + instant-space-optimization'
             };
         console.log('UrmiMusic Database loaded:', BUILD_INFO);
 
@@ -703,6 +703,10 @@
             const ranges = getSelectedValues('range');
             const difficulties = getSelectedValues('difficulty');
 
+            // Reduce search section spacing immediately when search starts
+            const searchSection = document.querySelector('.search-section');
+            searchSection.classList.add('has-results');
+
             // Show loading state
             const searchButton = document.querySelector('.search-button');
             const searchText = document.getElementById('search-text');
@@ -769,6 +773,10 @@
                         <br><small>Error: ${error.message}</small>
                     </div>
                 `;
+                
+                // Reset spacing on error
+                const searchSection = document.querySelector('.search-section');
+                searchSection.classList.remove('has-results');
             } finally {
                 // Reset button state
                 searchButton.disabled = false;
@@ -780,10 +788,6 @@
             // Store all songs globally for pagination
             allSongs = songs;
             currentPage = 1;
-            
-            // Add class to reduce search section spacing when results are shown
-            const searchSection = document.querySelector('.search-section');
-            searchSection.classList.add('has-results');
             
             const resultsCount = document.getElementById('results-count');
             resultsCount.textContent = `Found ${count} song${count !== 1 ? 's' : ''}`;
